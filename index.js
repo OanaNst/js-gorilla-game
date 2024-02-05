@@ -9,10 +9,6 @@ const ctx = canvas.getContext("2d");
 
 newGame();
 
-function generateBackgroundBuilding(index) {}
-function generateBuilding(index) {}
-function initializeBombPosition() {}
-
 function newGame() {
   // Reset game state
   state = {
@@ -46,7 +42,44 @@ function newGame() {
   draw();
 }
 
-function draw() {}
+function generateBackgroundBuilding(index) {}
+function generateBuilding(index) {}
+function initializeBombPosition() {}
+
+function draw() {
+  ctx.save();
+
+  // Flip coordinate system upside down
+  ctx.translate(0, window.innerHeight);
+  ctx.scale(1, -1);
+
+  // Draw scene
+  drawBackground();
+  drawBackgroundBuildings();
+  drawBuildings();
+  drawGorilla(1);
+  drawGorilla(2);
+  drawBomb();
+
+  // Restore transformation
+  ctx.restore();
+}
+
+function drawBackground() {
+  const gradient = ctx.createLinearGradient(0, 0, 0, window.innerHeight);
+  gradient.addColorStop(1, "#F8BA85");
+  gradient.addColorStop(0, "#FFC28E");
+
+  //Draw sky
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+  //Draw moon
+  ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+  ctx.beginPath();
+  ctx.arc(300, 900, 60, 0, 2 * Math.PI);
+  ctx.fill();
+}
 
 // Event handlers
 
