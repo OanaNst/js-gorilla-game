@@ -28,7 +28,7 @@ function newGame() {
   };
 
   // Generate background buildings
-  for (let i = 0; i < 11; i++) {
+  for (let i = 0; i < 22; i++) {
     generateBackgroundBuilding(i);
   }
 
@@ -42,7 +42,22 @@ function newGame() {
   draw();
 }
 
-function generateBackgroundBuilding(index) {}
+function generateBackgroundBuilding(index) {
+  const previousBuilding = state.backgroundBuildings[index - 1];
+  const x = previousBuilding
+    ? previousBuilding.x + previousBuilding.width + 4
+    : -30;
+
+  const minWidth = 80;
+  const maxWidth = 150;
+  const width = minWidth + Math.random() * (maxWidth - minWidth);
+
+  const minHeight = 400;
+  const maxHeight = 650;
+  const height = minHeight + Math.random() * (maxHeight - minHeight);
+
+  state.backgroundBuildings.push({ x, width, height });
+}
 function generateBuilding(index) {}
 function initializeBombPosition() {}
 
@@ -79,6 +94,13 @@ function drawBackground() {
   ctx.beginPath();
   ctx.arc(300, 900, 60, 0, 2 * Math.PI);
   ctx.fill();
+}
+
+function drawBackgroundBuildings() {
+  state.backgroundBuildings.forEach((building) => {
+    ctx.fillStyle = "#947285";
+    ctx.fillRect(building.x, 0, building.width, building.height);
+  });
 }
 
 // Event handlers
