@@ -28,12 +28,12 @@ function newGame() {
   };
 
   // Generate background buildings
-  for (let i = 0; i < 22; i++) {
+  for (let i = 0; i < 17; i++) {
     generateBackgroundBuilding(i);
   }
 
   // Generate buildings
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 8; i++) {
     generateBuilding(i);
   }
 
@@ -208,6 +208,96 @@ function drawGorillaBody() {
   ctx.lineTo(7, 0);
   ctx.fill();
 }
+
+function drawGorillaLeftArm(player) {
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 18;
+
+  ctx.beginPath();
+  ctx.moveTo(-14, 50);
+
+  if (state.phase === "aiming" && state.currentPlayer === 1 && player === 1) {
+    ctx.quadraticCurveTo(
+      -44,
+      63,
+      -28 - state.bomb.velocity.x / 6.25,
+      107 - state.bomb.velocity.y / 6.25
+    );
+  } else if (state.phase === "celebrating" && state.currentPlayer === player) {
+    ctx.quadraticCurveTo(-44, 63, -28, 107);
+  } else {
+    ctx.quadraticCurveTo(-44, 45, -28, 12);
+  }
+
+  ctx.stroke();
+}
+
+function drawGorillaRightArm(player) {
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 18;
+
+  ctx.beginPath();
+  ctx.moveTo(+14, 50);
+
+  if (state.phase === "aiming" && state.currentPlayer === 2 && player === 2) {
+    ctx.quadraticCurveTo(
+      +44,
+      63,
+      +28 - state.bomb.velocity.x / 6.25,
+      107 - state.bomb.velocity.y / 6.25
+    );
+  } else if (state.phase === "celebrating" && state.currentPlayer === player) {
+    ctx.quadraticCurveTo(+44, 63, +28, 107);
+  } else {
+    ctx.quadraticCurveTo(+44, 45, +28, 12);
+  }
+
+  ctx.stroke();
+}
+
+function drawGorillaFace(player) {
+  // Face
+  ctx.fillStyle = "lightgray";
+  ctx.beginPath();
+  ctx.arc(0, 63, 9, 0, 2 * Math.PI);
+  ctx.moveTo(-3.5, 70);
+  ctx.arc(-3.5, 70, 4, 0, 2 * Math.PI);
+  ctx.moveTo(+3.5, 70);
+  ctx.arc(+3.5, 70, 4, 0, 2 * Math.PI);
+  ctx.fill();
+
+  // Eyes
+  ctx.fillStyle = "black";
+  ctx.beginPath();
+  ctx.arc(-3.5, 70, 1.4, 0, 2 * Math.PI);
+  ctx.moveTo(+3.5, 70);
+  ctx.arc(+3.5, 70, 1.4, 0, 2 * Math.PI);
+  ctx.fill();
+
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 1.4;
+
+  // Nose
+  ctx.beginPath();
+  ctx.moveTo(-3.5, 66.5);
+  ctx.lineTo(-1.5, 65);
+  ctx.moveTo(3.5, 66.5);
+  ctx.lineTo(1.5, 65);
+  ctx.stroke();
+
+  // Mouth
+  ctx.beginPath();
+  if (state.phase === "celebrating" && state.currentPlayer === player) {
+    ctx.moveTo(-5, 60);
+    ctx.quadraticCurveTo(0, 56, 5, 60);
+  } else {
+    ctx.moveTo(-5, 56);
+    ctx.quadraticCurveTo(0, 60, 5, 56);
+  }
+  ctx.stroke();
+}
+
+function drawBomb() {}
 
 // Event handlers
 
