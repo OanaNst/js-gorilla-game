@@ -21,7 +21,7 @@ function newGame() {
       velocity: { x: 0, y: 0 },
     },
 
-    // Building
+    // Buildings
     backgroundBuildings: [],
     buildings: [],
     blastHoles: [],
@@ -32,8 +32,8 @@ function newGame() {
     generateBackgroundBuilding(i);
   }
 
-  // Generate building
-  for (let i = 0; i < 8; i++) {
+  // Generate buildings
+  for (let i = 0; i < 20; i++) {
     generateBuilding(i);
   }
 
@@ -48,8 +48,8 @@ function generateBackgroundBuilding(index) {
     ? previousBuilding.x + previousBuilding.width + 4
     : -30;
 
-  const minWidth = 80;
-  const maxWidth = 150;
+  const minWidth = 70;
+  const maxWidth = 130;
   const width = minWidth + Math.random() * (maxWidth - minWidth);
 
   const minHeight = 400;
@@ -58,7 +58,35 @@ function generateBackgroundBuilding(index) {
 
   state.backgroundBuildings.push({ x, width, height });
 }
-function generateBuilding(index) {}
+function generateBuilding(index) {
+  const previousBuilding = state.buildings[index - 1];
+  const x = previousBuilding
+    ? previousBuilding.x + previousBuilding.width + 4
+    : 0;
+
+  const minWidth = 90;
+  const maxWidth = 160;
+  const width = minWidth + Math.random() * (maxWidth - minWidth);
+
+  const platformWithGorilla = index === 1 || index === 18;
+
+  const minHeight = 300;
+  const maxHeight = 450;
+  const minHeightGorilla = 280;
+  const maxHeightGorilla = 300;
+
+  const height = platformWithGorilla
+    ? minHeightGorilla + Math.random() * (maxHeightGorilla - minHeightGorilla)
+    : minHeight + Math.random() * (maxHeight - minHeight);
+
+  const lightsOn = [];
+  for (let i = 0; i < 50; i++) {
+    const light = Math.random() <= 0.33 ? true : false;
+    lightsOn.push(light);
+  }
+
+  state.buildings.push({ x, width, height, lightsOn });
+}
 function initializeBombPosition() {}
 
 function draw() {
@@ -100,6 +128,45 @@ function drawBackgroundBuildings() {
   state.backgroundBuildings.forEach((building) => {
     ctx.fillStyle = "#947285";
     ctx.fillRect(building.x, 0, building.width, building.height);
+  });
+}
+
+function drawBuildings() {
+  state.buildings.forEach((building) => {
+    //Draw building
+    ctx.fillStyle = "#4A3C68";
+    ctx.fillRect(building.x, 0, building.width, building.height);
+
+    //Draw windows
+    const windowWidth = 20;
+    const windowHeight = 22;
+    const gap = 25;
+
+    const numberOfFloors = Math.ceil(
+      (building.height - gap) / (windowHeight + gap)
+    );
+    const numberOfRoomsPerFloor = Math.floor(
+      (building.width - gap) / (windowWidth + gap)
+    );
+
+    for (let floor = 0; floor < numberOfFloors; floor++) {
+      for (let room = 0; room < numberOfRoomsPerFloor; room++) {
+        if (building.lightsOn[floor * numberOfRoomsPerFloor + room]) {
+          ctx.save();
+
+          ctx.translate(building.x + gap, building.height - gap);
+          ctx.scale(1, -1);
+
+          const x = room * (windowWidth + gap);
+          const y = room * (windowHeight + gap);
+
+          ctx.fillStyle = "#EBB6A2";
+          ctx.fillRect(x, y, windowWidth, windowHeight);
+
+          ctx.restore();
+        }
+      }
+    }
   });
 }
 
